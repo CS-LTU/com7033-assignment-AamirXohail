@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center mb-4">
+    <div class="col-lg-10">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h2 class="mb-2 fw-bold">Dataset structure and data quality</h2>
+                <p class="mb-0 text-muted">
+                    This page summarises the stroke dataset used by the Hospital Insight Hub.
+                    It focuses on how the data is organised, where values are missing and which
+                    fields contain potential outliers. The goal is to support responsible use of
+                    the dataset before any modelling or decision support logic is added.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not data_available %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="fw-semibold mb-2">Dataset not available</h5>
+                <p class="mb-0 text-muted">
+                    The configured dataset path
+                    <code>{{ dataset_path }}</code>
+                    does not point to a readable CSV file. Please ensure the stroke
+                    dataset is placed at that location and reload this page.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+<div class="row justify-content-center mb-4">
+    <div class="col-lg-10">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-transparent border-0 pb-0">
+                <h5 class="fw-semibold mb-1">Sample of raw records</h5>
+                <p class="text-muted small mb-0">
+                    First ten rows of the CSV file, shown without any anonymisation or
+                    aggregation. In practice, access to patient-level data would be restricted.
+                </p>
+            </div>
+            <div class="card-body pt-3">
+                <div class="table-responsive">
+                    {{ preview_html | safe }}
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-transparent border-0 pb-0">
+                <h5 class="fw-semibold mb-1">Missing values</h5>
+                <p class="text-muted small mb-0">
+                    Columns with a non-zero number of missing entries may require imputation,
+                    removal or closer manual inspection depending on clinical relevance.
+                </p>
+            </div>
+            <div class="card-body pt-3">
+                <div class="table-responsive">
+                    {{ missing_html | safe }}
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-transparent border-0 pb-0">
+                <h5 class="fw-semibold mb-1">Numeric summary statistics</h5>
+                <p class="text-muted small mb-0">
+                    Descriptive statistics for numeric fields only, including typical ranges,
+                    spread and extreme values. These figures are useful as a starting point
+                    when checking whether the dataset aligns with expectations.
+                </p>
+            </div>
+            <div class="card-body pt-3">
+                {% if summary_html %}
+                    <div class="table-responsive">
+                        {{ summary_html | safe }}
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">
+                        No numeric columns were detected in the dataset.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-transparent border-0 pb-0">
+                <h5 class="fw-semibold mb-1">Outlier counts (IQR method)</h5>
+                <p class="text-muted small mb-0">
+                    Outliers are estimated using the interquartile range method for each numeric column.
+                    High counts do not always mean errors, but they highlight fields that should be reviewed
+                    before using the values in downstream analysis.
+                </p>
+            </div>
+            <div class="card-body pt-3">
+                {% if outlier_html %}
+                    <div class="table-responsive">
+                        {{ outlier_html | safe }}
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">
+                        No outliers were detected based on the current IQR thresholds.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent border-0 pb-0">
+                <h5 class="fw-semibold mb-1">Field descriptions</h5>
+                <p class="text-muted small mb-0">
+                    Short, human-readable descriptions of the most important attributes in the dataset.
+                </p>
+            </div>
+            <div class="card-body pt-3">
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>Column</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for col, desc in column_descriptions.items() %}
+                                <tr>
+                                    <td>{{ col }}</td>
+                                    <td>{{ desc }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

@@ -1,6 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
 
+
+<h2 class="mb-1 page-header-title">Dataset summary & data analysis</h2>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <p class="mb-0 page-header-subtitle">
+        This page provides a detailed overview of the stroke dataset, including missing values,
+        descriptive statistics and outlier detection.
+    </p>
+
+    <a href="{{ url_for('insights.data_visuals') }}" class="btn btn-gradient">
+        Open data visualisations
+    </a>
+</div>
+
+
+<hr>
+
+
 <div class="row justify-content-center mb-4">
     <div class="col-lg-10">
         <div class="card border-0 shadow-sm">

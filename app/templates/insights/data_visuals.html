@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- Header -->
+   <div class="text-center mb-4">
+    <h2 class="fw-bold page-header-title">Data visualisations</h2>
+    <p class="page-header-subtitle">
+        Visual summaries derived from the current stroke dataset.
+    </p>
+</div>
+
+
+    <!-- Summary cards -->
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 p-3 text-center" style="background:#e3f2fd;">
+                <h6 class="fw-bold text-muted">Total records</h6>
+                <h3 class="text-primary fw-bold mb-0">{{ total_patients }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 p-3 text-center" style="background:#fff3e0;">
+                <h6 class="fw-bold text-muted">Average age</h6>
+                <h3 class="text-warning fw-bold mb-0">
+                    {% if avg_age is not none %}{{ avg_age }}{% else %}-{% endif %}
+                </h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 p-3 text-center" style="background:#fce4ec;">
+                <h6 class="fw-bold text-muted">Average BMI</h6>
+                <h3 class="text-danger fw-bold mb-0">
+                    {% if avg_bmi is not none %}{{ avg_bmi }}{% else %}-{% endif %}
+                </h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 p-3 text-center" style="background:#e8f5e9;">
+                <h6 class="fw-bold text-muted">Stroke rate</h6>
+                <h3 class="text-success fw-bold mb-0">
+                    {% if stroke_rate is not none %}{{ stroke_rate }}%{% else %}-{% endif %}
+                </h3>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Charts -->
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3">
+                <h5 class="text-center mb-3 fw-bold">Gender distribution</h5>
+                <img src="{{ url_for('static', filename=gender_img) }}"
+                     class="img-fluid rounded" alt="Gender chart">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3">
+                <h5 class="text-center mb-3 fw-bold">Stroke vs no stroke</h5>
+                <img src="{{ url_for('static', filename=stroke_img) }}"
+                     class="img-fluid rounded" alt="Stroke outcome chart">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3">
+                <h5 class="text-center mb-3 fw-bold">Age distribution</h5>
+                <img src="{{ url_for('static', filename=age_img) }}"
+                     class="img-fluid rounded" alt="Age histogram">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm p-3">
+                <h5 class="text-center mb-3 fw-bold">BMI distribution</h5>
+                <img src="{{ url_for('static', filename=bmi_img) }}"
+                     class="img-fluid rounded" alt="BMI histogram">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card shadow-sm p-3">
+                <h5 class="text-center mb-3 fw-bold">Correlation heatmap</h5>
+                <img src="{{ url_for('static', filename=heatmap_img) }}"
+                     class="img-fluid rounded" alt="Correlation heatmap">
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

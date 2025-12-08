@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center mb-4">
+    <div class="col-lg-10">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h2 class="mb-2 fw-bold">Activity log</h2>
+                <p class="mb-0 text-muted">
+                    High level audit trail of changes performed through the Hospital Insight Hub.
+                    The log records which authenticated user triggered each action and when it took place.
+                    Only a limited number of recent entries are shown for brevity.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Username</th>
+                                <th scope="col">Action</th>
+                                <th scope="col">Details</th>
+                                <th scope="col">Timestamp (UTC)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if logs %}
+                                {% for log in logs %}
+                                    <tr>
+                                        <td>{{ log.username }}</td>
+                                        <td>
+                                            <span class="badge bg-primary">
+                                                {{ log.action }}
+                                            </span>
+                                        </td>
+                                        <td>{{ log.details or "-" }}</td>
+                                        <td>
+                                            {% if log.timestamp %}
+                                                {{ log.timestamp }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">
+                                        No activity has been recorded yet.
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

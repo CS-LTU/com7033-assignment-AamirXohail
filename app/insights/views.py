@@ -1,8 +1,10 @@
 import pandas as pd
-from flask import render_template, current_app
+from flask import render_template, current_app, flash
 from flask_login import login_required
+from pymongo.errors import ServerSelectionTimeoutError
 
 from . import insights_bp
+from app.db_mongo import get_activity_collection
 
 
 def _load_stroke_data():
@@ -112,7 +114,6 @@ def data_overview():
     else:
         outlier_html = None
 
-    # Simple column descriptions (you can expand later in the report)
     column_descriptions = {
         "id": "Internal row identifier provided with the dataset.",
         "gender": "Recorded biological sex of the patient.",
@@ -138,3 +139,34 @@ def data_overview():
         outlier_html=outlier_html,
         column_descriptions=column_descriptions,
     )
+
+
+@insights_bp.route("/activity-log")
+@login_required
+def activity_log():
+    """
+    Read the latest activity entries from MongoDB and render them in a table.
+    """
+    coll = get_activity_collection()
+    try:
+        docs = list(coll.find().sort("timestamp", -1).limit(100))
+    except ServerSelectionTimeoutError:
+        docs = []
+        flash(
+            "Could not connect to the activity log store. "
+            "Please verify MongoDB configuration.",
+            "danger",
+        )
+
+    logs = []
+    for d in docs:
+        logs.append(
+            {
+                "username": d.get("username", "unknown"),
+                "action": d.get("action", "UNKNOWN"),
+                "details": d.get("details") or "",
+                "timestamp": d.get("timestamp"),
+            }
+        )
+
+    return render_template("insights/activity_log.html", logs=logs)

@@ -1,15 +1,17 @@
 from bson.objectid import ObjectId
 from flask import render_template, redirect, url_for, flash, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 
+from app.db_mongo import get_patient_collection, log_activity
 from . import patient_bp
 from .forms import PatientForm
-from ..db_mongo import get_mongo_db
 
 
 def _get_patient_collection():
-    db = get_mongo_db()
-    return db["patients"]
+    """
+    Thin wrapper so we can change Mongo wiring in one place if needed.
+    """
+    return get_patient_collection()
 
 
 @patient_bp.route("/", methods=["GET"])
@@ -24,7 +26,11 @@ def list_patients():
 
     patients = list(coll.find(query).sort("age", 1))
 
-    return render_template("patient/list.html", patients=patients, search_query=search_id)
+    return render_template(
+        "patient/list.html",
+        patients=patients,
+        search_query=search_id,
+    )
 
 
 @patient_bp.route("/add", methods=["GET", "POST"])
@@ -50,6 +56,15 @@ def add_patient():
         }
 
         coll.insert_one(doc)
+
+        # Activity log for patient creation (no raw _id)
+        display_id = doc.get("patient_id") or "not specified"
+        log_activity(
+            username=current_user.username,
+            action="CREATE_PATIENT",
+            details=f"Created new patient record (hospital id={display_id}).",
+        )
+
         flash("Patient record added.", "success")
         return redirect(url_for("patient.list_patients"))
 
@@ -95,6 +110,15 @@ def edit_patient(patient_id):
         }
 
         coll.update_one({"_id": ObjectId(patient_id)}, {"$set": update_doc})
+
+        # Use the edited hospital id for a clean log message
+        display_id = update_doc.get("patient_id") or "not specified"
+        log_activity(
+            username=current_user.username,
+            action="UPDATE_PATIENT",
+            details=f"Updated patient record (hospital id={display_id}).",
+        )
+
         flash("Patient record updated.", "success")
         return redirect(url_for("patient.list_patients"))
 
@@ -123,7 +147,17 @@ def view_patient(patient_id):
 def delete_patient(patient_id):
     coll = _get_patient_collection()
     try:
+        # Fetch once so we can get the friendly hospital id
+        doc = coll.find_one({"_id": ObjectId(patient_id)})
         coll.delete_one({"_id": ObjectId(patient_id)})
+
+        display_id = (doc or {}).get("patient_id") or "not specified"
+        log_activity(
+            username=current_user.username,
+            action="DELETE_PATIENT",
+            details=f"Deleted patient record (hospital id={display_id}).",
+        )
+
         flash("Patient record deleted.", "info")
     except Exception:
         flash("Could not delete patient.", "danger")

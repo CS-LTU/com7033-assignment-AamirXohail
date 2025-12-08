@@ -1,0 +1,8 @@
+python -m venv hospital_management
+
+hospital_management\Scripts\activate
+
+pip install flask flask-login flask-wtf flask-sqlalchemy pymongo python-dotenv pytest
+
+
+pip freeze > requirements.txt

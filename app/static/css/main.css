@@ -1,0 +1,71 @@
+/* Overall page background */
+.app-body {
+    background: radial-gradient(circle at top left, #0f766e 0, #020617 45%, #020617 100%);
+    min-height: 100vh;
+    color: #0f172a;
+}
+
+/* Navbar */
+.app-navbar {
+    background: linear-gradient(90deg, #0f766e, #0369a1);
+}
+
+/* Main content container */
+.app-main {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Hero card */
+.app-hero {
+    background: radial-gradient(circle at top left, #e0f2fe 0, #f9fafb 60%);
+}
+
+/* Stat cards */
+.app-stat-card {
+    border-radius: 0.9rem;
+    background: #ffffff;
+}
+
+.app-stat-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.app-stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.app-stat-icon {
+    font-size: 1.4rem;
+    color: #0f766e;
+}
+
+.app-stat-hint {
+    font-size: 0.8rem;
+}
+
+/* Live data badge */
+.app-badge-live {
+    background-color: #16a34a;
+    color: #ecfdf5;
+    font-weight: 600;
+}
+
+/* Tables and cards override */
+.table {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.card {
+    border-radius: 0.9rem;
+}
+
+/* Auth pages tweak if you want later (optional)
+   You can add specific classes in auth templates and style here. */

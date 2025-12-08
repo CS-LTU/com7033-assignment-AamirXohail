@@ -1,28 +1,155 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2 class="mb-3">Patient details</h2>
+<div class="container py-4">
 
-<div class="card shadow-sm p-4 mb-3">
-    <ul class="list-unstyled mb-0">
-        <li><strong>Patient ID:</strong> {{ patient.patient_id or patient.get("patient_id") or "N/A" }}</li>
-        <li><strong>Gender:</strong> {{ patient.gender or patient.get("gender") }}</li>
-        <li><strong>Age:</strong> {{ patient.age or patient.get("age") }}</li>
-        <li><strong>Hypertension:</strong> {{ "Yes" if (patient.hypertension or patient.get("hypertension")) == 1 else "No" }}</li>
-        <li><strong>Heart disease:</strong> {{ "Yes" if (patient.heart_disease or patient.get("heart_disease")) == 1 else "No" }}</li>
-        <li><strong>Ever married:</strong> {{ patient.ever_married or patient.get("ever_married") }}</li>
-        <li><strong>Work type:</strong> {{ patient.work_type or patient.get("work_type") }}</li>
-        <li><strong>Residence type:</strong> {{ patient.residence_type or patient.get("residence_type") }}</li>
-        <li><strong>Average glucose level:</strong> {{ patient.avg_glucose_level or patient.get("avg_glucose_level") }}</li>
-        <li><strong>BMI:</strong> {{ patient.bmi or patient.get("bmi") or "N/A" }}</li>
-        <li><strong>Smoking status:</strong> {{ patient.smoking_status or patient.get("smoking_status") }}</li>
-        <li><strong>Stroke:</strong>
-            {% set stroke_value = patient.stroke or patient.get("stroke") %}
-            {{ "Stroke" if stroke_value == 1 else "No stroke" }}
-        </li>
-    </ul>
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="mb-1 page-header-title">
+                Patient record
+                {% if patient.patient_id %}
+                    <span class="fw-light">#{{ patient.patient_id }}</span>
+                {% endif %}
+            </h2>
+            <p class="mb-0 page-header-subtitle">
+                Detailed view of a single patient entry linked to the stroke dataset.
+            </p>
+        </div>
+
+        <div class="text-end">
+            <a href="{{ url_for('patient.list_patients') }}" class="btn btn-table-action btn-table-action-view me-2">
+                Back to patient list
+            </a>
+            <a href="{{ url_for('patient.edit_patient', patient_id=patient._id) }}"
+               class="btn btn-table-action btn-table-action-edit">
+                Edit patient
+            </a>
+        </div>
+    </div>
+
+    <!-- Summary card -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body d-flex flex-wrap gap-4 align-items-center">
+
+            <div>
+                <div class="text-muted small">Gender</div>
+                <div class="fs-5 fw-semibold">{{ patient.gender }}</div>
+            </div>
+
+            <div>
+                <div class="text-muted small">Age</div>
+                <div class="fs-5 fw-semibold">
+                    {{ patient.age }} <span class="small text-muted">years</span>
+                </div>
+            </div>
+
+            <div>
+                <div class="text-muted small">BMI</div>
+                <div class="fs-5 fw-semibold">
+                    {{ patient.bmi if patient.bmi is not none else "N/A" }}
+                </div>
+            </div>
+
+            <div>
+                <div class="text-muted small">Stroke status</div>
+                <div class="mt-1">
+                    {% if patient.stroke == 1 %}
+                        <span class="badge bg-danger px-3 py-2">Stroke</span>
+                    {% else %}
+                        <span class="badge bg-success px-3 py-2">No stroke</span>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Detailed information -->
+    <div class="row g-4">
+
+        <!-- Clinical factors -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-dark text-white">
+                    Clinical factors
+                </div>
+                <div class="card-body">
+
+                    <div class="mb-3 d-flex justify-content-between">
+                        <span>Hypertension</span>
+                        <span>
+                            {% if patient.hypertension == 1 %}
+                                <span class="badge bg-warning text-dark">Diagnosed</span>
+                            {% else %}
+                                <span class="badge bg-secondary">No history</span>
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="mb-3 d-flex justify-content-between">
+                        <span>Heart disease</span>
+                        <span>
+                            {% if patient.heart_disease == 1 %}
+                                <span class="badge bg-danger">Present</span>
+                            {% else %}
+                                <span class="badge bg-secondary">No known disease</span>
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="mb-3 d-flex justify-content-between">
+                        <span>Average glucose level</span>
+                        <span class="fw-semibold">
+                            {{ patient.avg_glucose_level }} <span class="small text-muted">mg/dL</span>
+                        </span>
+                    </div>
+
+                    <div class="mb-1 d-flex justify-content-between">
+                        <span>BMI</span>
+                        <span class="fw-semibold">
+                            {{ patient.bmi if patient.bmi is not none else "N/A" }}
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Demographics & lifestyle -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-dark text-white">
+                    Demographics & lifestyle
+                </div>
+                <div class="card-body">
+
+                    <div class="mb-3 d-flex justify-content-between">
+                        <span>Ever married</span>
+                        <span class="fw-semibold">{{ patient.ever_married }}</span>
+                    </div>
+
+                    <div class="mb-3 d-flex justify-content-between">
+                        <span>Work type</span>
+                        <span class="fw-semibold">{{ patient.work_type }}</span>
+                    </div>
+
+                    <div class="mb-3 d-flex justify-content-between">
+                        <span>Residence type</span>
+                        <span class="fw-semibold">{{ patient.residence_type }}</span>
+                    </div>
+
+                    <div class="mb-1 d-flex justify-content-between">
+                        <span>Smoking status</span>
+                        <span class="fw-semibold">{{ patient.smoking_status }}</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>
-
-<a href="{{ url_for('patient.list_patients') }}" class="btn btn-secondary">Back to list</a>
 
 {% endblock %}

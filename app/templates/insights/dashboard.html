@@ -1,5 +1,51 @@
 {% extends "base.html" %}
 {% block content %}
-<h2 class="mb-4">Analytics Dashboard</h2>
-<p>This is the placeholder dashboard. We will later load charts and metrics from the stroke dataset.</p>
+
+<h2 class="mb-4">Analytics dashboard</h2>
+
+{% if not data_available %}
+    <div class="alert alert-warning">
+        Stroke dataset could not be loaded. Make sure
+        <code>{{ config.STROKE_DATA_PATH if config is defined else "dataset/stroke_data.csv" }}</code>
+        exists.
+    </div>
+{% else %}
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 p-3 text-center">
+            <h6 class="text-muted">Total records</h6>
+            <h3 class="fw-bold">{{ total_records }}</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 p-3 text-center">
+            <h6 class="text-muted">Average age</h6>
+            <h3 class="fw-bold">{{ avg_age }}</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 p-3 text-center">
+            <h6 class="text-muted">Average BMI</h6>
+            <h3 class="fw-bold">{{ avg_bmi }}</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 p-3 text-center">
+            <h6 class="text-muted">Stroke rate</h6>
+            <h3 class="fw-bold">{{ stroke_rate }}%</h3>
+        </div>
+    </div>
+</div>
+
+<p class="text-muted">
+    These metrics are computed directly from the stroke prediction dataset loaded from
+    <code>dataset/stroke_data.csv</code>.
+</p>
+
+{% endif %}
+
 {% endblock %}

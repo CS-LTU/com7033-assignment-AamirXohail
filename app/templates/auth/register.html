@@ -1,7 +1,54 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="text-center mt-5">
-    <h2>Register</h2>
-    <p>This will be replaced with a proper registration form.</p>
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <h3 class="text-center mb-3">Create account</h3>
+                <p class="text-center text-muted mb-4">
+                    Set up a secure login for the Hospital Management system.
+                </p>
+
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        {{ form.username.label(class="form-label") }}
+                        {{ form.username(class="form-control", placeholder="Choose a username") }}
+                        {% for error in form.username.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.password.label(class="form-label") }}
+                        {{ form.password(class="form-control", placeholder="Create a password") }}
+                        {% for error in form.password.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.confirm_password.label(class="form-label") }}
+                        {{ form.confirm_password(class="form-control", placeholder="Repeat your password") }}
+                        {% for error in form.confirm_password.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-grid gap-2 mt-3">
+                        {{ form.submit(class="btn btn-success") }}
+                    </div>
+                </form>
+
+                <div class="text-center mt-3">
+                    <span class="text-muted">Already registered?</span>
+                    <a href="{{ url_for('auth.login') }}">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 {% endblock %}

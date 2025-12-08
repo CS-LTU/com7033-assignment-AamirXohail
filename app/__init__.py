@@ -1,4 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, redirect, url_for
+from flask_login import current_user
+
 from config import config_map
 from .extensions import db, login_manager, csrf
 from .db_mongo import close_mongo_client
@@ -19,7 +21,7 @@ def create_hospital_app(config_name: str = "default") -> Flask:
     login_manager.init_app(app)
     csrf.init_app(app)
 
-    # Login settings
+    # Login manager configuration
     login_manager.login_view = "auth.login"
     login_manager.login_message_category = "warning"
 
@@ -32,15 +34,17 @@ def create_hospital_app(config_name: str = "default") -> Flask:
     app.register_blueprint(patient_bp)
     app.register_blueprint(insights_bp)
 
-    # Home route
+    # Home route: redirect depending on auth status
     @app.route("/")
     def home():
-        return render_template("insights/dashboard.html")
+        if current_user.is_authenticated:
+            return redirect(url_for("insights.dashboard"))
+        return redirect(url_for("auth.login"))
 
-    # Ensure Mongo client is closed after each app context
+    # Close Mongo client at the end of the app context
     app.teardown_appcontext(close_mongo_client)
 
-    # Create SQL tables (users) on first run
+    # Create SQL tables (for users etc.) on first run
     with app.app_context():
         db.create_all()
 

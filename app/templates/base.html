@@ -26,27 +26,38 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
+                   <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('patient.list_patients') }}">
-                        Patients
-                    </a>
-                </li>
+                {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('patient.list_patients') }}">
+                            Patients
+                        </a>
+                    </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('insights.dashboard') }}">
-                        Analytics
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('insights.dashboard') }}">
+                            Analytics
+                        </a>
+                    </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.login') }}">
-                        Login
-                    </a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                            Logout
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">
+                            Login
+                        </a>
+                    </li>
+                {% endif %}
 
             </ul>
+        </div>
+
         </div>
     </div>
 </nav>

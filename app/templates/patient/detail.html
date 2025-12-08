@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-3">Patient details</h2>
+
+<div class="card shadow-sm p-4 mb-3">
+    <ul class="list-unstyled mb-0">
+        <li><strong>Patient ID:</strong> {{ patient.patient_id or patient.get("patient_id") or "N/A" }}</li>
+        <li><strong>Gender:</strong> {{ patient.gender or patient.get("gender") }}</li>
+        <li><strong>Age:</strong> {{ patient.age or patient.get("age") }}</li>
+        <li><strong>Hypertension:</strong> {{ "Yes" if (patient.hypertension or patient.get("hypertension")) == 1 else "No" }}</li>
+        <li><strong>Heart disease:</strong> {{ "Yes" if (patient.heart_disease or patient.get("heart_disease")) == 1 else "No" }}</li>
+        <li><strong>Ever married:</strong> {{ patient.ever_married or patient.get("ever_married") }}</li>
+        <li><strong>Work type:</strong> {{ patient.work_type or patient.get("work_type") }}</li>
+        <li><strong>Residence type:</strong> {{ patient.residence_type or patient.get("residence_type") }}</li>
+        <li><strong>Average glucose level:</strong> {{ patient.avg_glucose_level or patient.get("avg_glucose_level") }}</li>
+        <li><strong>BMI:</strong> {{ patient.bmi or patient.get("bmi") or "N/A" }}</li>
+        <li><strong>Smoking status:</strong> {{ patient.smoking_status or patient.get("smoking_status") }}</li>
+        <li><strong>Stroke:</strong>
+            {% set stroke_value = patient.stroke or patient.get("stroke") %}
+            {{ "Stroke" if stroke_value == 1 else "No stroke" }}
+        </li>
+    </ul>
+</div>
+
+<a href="{{ url_for('patient.list_patients') }}" class="btn btn-secondary">Back to list</a>
+
+{% endblock %}

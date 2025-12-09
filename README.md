@@ -129,26 +129,43 @@ MongoDB Atlas stores patient data and audit logs.
 Pandas and Matplotlib generate tables and charts for analysis.
 
 #### Directory overview
-hospital_managment_application/
-│
-├── server.py                # Entry point – runs the Flask app
-├── config.py                # Configuration helper
-├── requirements.txt
-├── .env                     # Environment variables (ignored by Git)
-│
-├── app/
-│   ├── __init__.py          # create_hospital_app, blueprint registration
-│   ├── extensions.py        # db, login_manager and other extensions
-│   ├── models.py            # User model (SQLite)
-│   ├── db_mongo.py          # MongoDB connection + helper functions
-│   ├── security_utils.py    # Password hashing and related helpers
-│   │
-│   ├── auth/                # Login, register, profile
-│   ├── patient/             # Patient CRUD
-│   └── insights/            # Dashboard, data overview, visuals, activity log
-│
-├── app/templates/           # Jinja2 templates
-└── app/static/              # CSS + generated chart images
+ChatGPT said:
+
+Nice, push looks perfect now 👌
+
+Yeah, that directory section just needs proper markdown formatting. Replace your current “At a high level / Directory overview” chunk with this:
+
+## 4. System layout
+
+At a high level:
+
+- Flask app factory (`create_hospital_app`) wires everything together.  
+- Blueprints split the functionality into `auth`, `patient`, and `insights` modules.  
+- SQLite + SQLAlchemy manage user accounts.  
+- MongoDB Atlas stores patient data and audit logs.  
+- Pandas and Matplotlib generate tables and charts for analysis.  
+
+### Directory overview
+
+- `hospital_managment_application/`  
+  - `server.py` – Entry point that runs the Flask app  
+  - `config.py` – Configuration helper  
+  - `requirements.txt` – Python dependencies  
+  - `.env` – Environment variables (ignored by Git)  
+
+  - `app/`  
+    - `__init__.py` – `create_hospital_app`, blueprint registration  
+    - `extensions.py` – Database and `login_manager` setup  
+    - `models.py` – User model (SQLite)  
+    - `db_mongo.py` – MongoDB connection and helper functions  
+    - `security_utils.py` – Password hashing and related helpers  
+
+    - `auth/` – Login, register, profile views and forms  
+    - `patient/` – Patient CRUD views and forms  
+    - `insights/` – Dashboard, data overview, visualisations, activity log  
+
+  - `app/templates/` – Jinja2 templates  
+  - `app/static/` – CSS and generated chart images
 
 ## 5. Security and privacy checklist
 This project is not a full security blueprint, but it deliberately includes several good practices:
